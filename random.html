@@ -35,7 +35,7 @@
 
         $('form').submit(function(){
          msg = $('#m').val()
-         console.log('User typed message:',msg)
+         //console.log('User typed message:',msg)
           socket.emit('fromClient',{msg,room})//skickar chat message till servern
          
           $('#m').val('');//nollar inmatningen
@@ -43,13 +43,13 @@
         });
 
         socket.on('messageFromServer',(msg)=>{//tar emot chat message från servern
-          console.log('data from server : ',msg)
+          //console.log('data from server : ',msg)
           $('#messages').append($('<li>').text(msg));//skriver ut texten användaren skrev
           window.scrollTo(0, document.body.scrollHeight);
         });
 
         socket.on('disconnent',function(data){
-          console.log(data);
+          //console.log(data);
         })
     </script>
   </body>
