@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chat app</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #messages { margin-bottom: 40px }
+    </style>
+  </head>
+  <body>
+    <a href="/">Till startsidan</a>
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+     var socket = io();
+    let room = 'Random' //här sätts rumnamnet
+    
+      document.getElementById('m').focus() //focus på inputfield
+
+
+      socket.on('connect',()=>{
+        socket.emit('join', {room: room})
+      })
+
+        $('form').submit(function(){
+         msg = $('#m').val()
+         console.log('User typed message:',msg)
+          socket.emit('fromClient',{msg,room})//skickar chat message till servern
+         
+          $('#m').val('');//nollar inmatningen
+          return false;
+        });
+
+        socket.on('messageFromServer',(msg)=>{//tar emot chat message från servern
+          console.log('data from server : ',msg)
+          $('#messages').append($('<li>').text(msg));//skriver ut texten användaren skrev
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on('disconnent',function(data){
+          console.log(data);
+        })
+    </script>
+  </body>
+</html>
